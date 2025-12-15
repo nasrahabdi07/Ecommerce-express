@@ -572,7 +572,7 @@ NODE_ENV=development
 
 ---
 
-## 🎓 For Your Lecturer
+
 
 ### What This Project Demonstrates:
 
