@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #333; }
+    .checkout-container { width: 90%; max-width: 1000px; margin: 2rem auto; display: flex; gap: 2rem; }
+    .checkout-steps { display: flex; justify-content: center; margin-bottom: 2rem; }
+    .step { display: flex; align-items: center; color: #777; font-weight: 600; }
+    .step.active { color: #007bff; }
+    .step::before {
+      content: attr(data-step);
+      width: 25px; height: 25px; border-radius: 50%;
+      background: #ccc; display: inline-flex; align-items: center; justify-content: center;
+      margin-right: 8px; color: #fff; font-size: 0.8rem;
+    }
+    .step.active::before { background: #007bff; }
+    .step-line { width: 40px; height: 2px; background: #ddd; margin: 0 10px; }
+
+    form, .review-section { flex: 2; background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .order-summary { flex: 1; background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+    h3 { margin-bottom: 1rem; }
+    input { width: 100%; padding: 8px; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+
+    .btn-primary { background: #007bff; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+    .btn-secondary { background: #eee; color: #333; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+    .btn-success { background: #28a745; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+
+    .hidden { display: none; }
+    .summary-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .summary-total { font-weight: bold; font-size: 1.2rem; }
+
+    .qty-input { width: 50px; text-align: center; margin: 0 8px; }
+    .remove-btn { background: none; border: none; color: red; cursor: pointer; font-size: 16px; }
+
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center; z-index: 10;
+    }
+    .popup {
+      background: white; padding: 20px 30px; border-radius: 10px; text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none !important;
+    }
+    footer { background: #0f172a; color: #fff; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 3rem 1rem; }
+    footer div { max-width: 300px; }
+    footer h3 { margin-bottom: 1rem; }
+    footer a { color: #ddd; text-decoration: none; display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    footer a:hover { color: #fff; }
+    .footer-bottom { text-align: center; background: #0f172a; padding: 1rem; border-top: 1px solid #1e293b; color: #aaa; font-size: 0.9rem; }
+
+    footer p {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #777;
+}
+/* --- Improved Shipping Form Styling Only --- */
+#shippingForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+}
+
+#shippingForm h3 {
+  grid-column: 1 / -1;
+  margin-bottom: 1.2rem;
+}
+
+#shippingForm input,
+#shippingForm select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+#shippingForm input:focus,
+#shippingForm select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+#shippingForm label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+  color: #1e293b;
+}
+
+/* Make Country dropdown full width but aligned with grid */
+#shippingForm .form-group {
+  grid-column: 1 / -1;
+}
+
+/* ZIP field stays half-width aligned properly */
+#shippingForm #zip {
+  grid-column: 1 / span 1;
+}
+
+/* Button spans full width */
+#shippingForm #toPayment {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* --- Order Summary Redesign --- */
+.order-summary {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 1.8rem;
+  font-size: 0.95rem;
+}
+
+.order-summary h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #111827;
+}
+
+/* Each product line */
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.95rem;
+  color: #1e293b;
+  border: none;
+}
+
+/* Product quantity input and remove button alignment */
+.summary-line .qty-input {
+  width: 45px;
+  text-align: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  margin: 0 10px;
+}
+
+.summary-line .remove-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+}
+.summary-line .qty-display {
+  margin: 0 10px;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.summary-line span:first-child {
+  font-weight: 500;
+  color: #1e293b;
+}
+.summary-line span:last-child {
+  font-weight: 600;
+  color: #0f172a;
+}
+/* Divider lines between sections */
+.order-summary hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 0.8rem 0;
+}
+
+/* Subtotal, shipping, tax rows */
+.summary-shipping,
+.summary-tax {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+  padding: 4px 0;
+  font-size: 0.95rem;
+}
+
+/* Subtotal emphasized slightly */
+.summary-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #111827;
+  padding: 4px 0;
+}
+
+/* Total bold and larger */
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.8rem;
+}
+
+/* Responsive tweak */
+@media (max-width: 768px) {
+  .order-summary {
+    width: 100%;
+  }
+}
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">Shopzilla</div>
+    <nav>
+      <a href="/" class="<%= title === 'Shopzilla' ? 'active' : '' %>">Home</a>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/cart" class="cart-btn">🛒 Cart (<%= cartCount || 0 %>)</a>
+      <a href="/login" class="btn-outline">Sign In</a>
+      <a href="/register" class="btn-primary">Sign Up</a>
+    </div>
+  </header>
+
+  <h2 style="text-align:center; margin:2rem 0;">Checkout</h2>
+
+  <!-- Progress Steps -->
+  <div class="checkout-steps">
+    <div class="step active" data-step="1">Shipping</div>
+    <div class="step-line"></div>
+    <div class="step" data-step="2">Payment</div>
+    <div class="step-line"></div>
+    <div class="step" data-step="3">Review</div>
+  </div>
+
+  <div class="checkout-container">
+    <!-- Shipping Form -->
+    <form id="shippingForm">
+      <h3>Shipping Information</h3>
+      <input type="text" id="firstName" placeholder="First Name *" required>
+      <input type="text" id="lastName" placeholder="Last Name *" required>
+      <input type="email" id="email" placeholder="Email *" required>
+      <input type="text" id="phone" placeholder="Phone *" required>
+      <input type="text" id="address" placeholder="Address *" required>
+      <input type="text" id="city" placeholder="City *" required>
+
+      <!-- 🌍 Country Dropdown -->
+      <div class="form-group">
+        <label for="country">Country *</label>
+        <select id="country" name="country" class="form-control" required>
+          <option value="">Loading countries...</option>
+        </select>
+      </div>
+
+      <input type="text" id="zip" placeholder="ZIP Code *" required>
+      <button type="button" class="btn-primary" id="toPayment">Continue to Payment</button>
+    </form>
+
+    <!-- Payment Form -->
+    <form id="paymentForm" class="hidden">
+      <h3>Payment Information</h3>
+      <input type="text" id="cardNumber" placeholder="Card Number *" required>
+      <input type="text" id="expiry" placeholder="Expiry Date (MM/YY) *" required>
+      <input type="text" id="cvv" placeholder="CVV *" required>
+      <input type="text" id="cardName" placeholder="Cardholder Name *" required>
+      <button type="button" class="btn-secondary" id="backToShipping">Back to Shipping</button>
+      <button type="button" class="btn-primary" id="toReview">Review Order</button>
+    </form>
+
+    <!-- Review Section -->
+    <div id="reviewSection" class="hidden review-section">
+      <h3>Review Your Order</h3>
+      <div id="reviewDetails"></div>
+      <textarea placeholder="Order Notes (Optional)" style="width:100%; height:100px; margin-top:10px;"></textarea>
+      <button type="button" class="btn-secondary" id="backToPayment">Back to Payment</button>
+      
+      <!-- 🟩 Currency selector removed here -->
+      
+      <button type="button" class="btn-success" id="placeOrder">Place Order</button>
+    </div>
+
+    <!-- Order Summary -->
+    <div id="orderSummary" class="order-summary">
+      <h3>Order Summary</h3>
+
+      <div id="summaryList">
+        <% cart.forEach(item => { %>
+          <div class="summary-line">
+            <span><%= item.name %></span>
+            <span>$<%= (item.price * item.quantity).toFixed(2) %></span>
+          </div>
+        <% }) %>
+      </div>
+
+      <div class="summary-subtotal">
+        <span>Subtotal</span>
+        <span>$<%= (Number(subtotal) || 0).toFixed(2) %></span>
+      </div>
+      <div class="summary-shipping"><span>Shipping</span><span>$0.00</span></div>
+      <div class="summary-tax"><span>Tax</span><span>$0.00</span></div>
+      <div class="summary-total"><strong>Total</strong><strong>$<%= (Number(subtotal) || 0).toFixed(2) %></strong></div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popupContainer" class="overlay hidden">
+    <div class="popup">
+      <p>Please fill in all required fields</p>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <h3>Shopzilla</h3>
+      <p>Your trusted online shopping destination for premium products. We offer quality items with fast shipping and excellent customer service.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="/">Home</a>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </footer>
+
+  <div class="footer-bottom">© 2025 Shopzilla. All rights reserved.</div>
+
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

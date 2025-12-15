@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Products | Shopzilla</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!-- ✅ NAVBAR -->
+  <header class="navbar">
+    <div class="logo">Shopzilla</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/products" class="active">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/cart" class="cart-btn">🛒 Cart (<%= cartCount || 0 %>)</a>
+      <a href="/login" class="btn-outline">Sign In</a>
+      <a href="/register" class="btn-primary">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- ✅ PAGE HEADER -->
+  <section class="page-header">
+    <h1>Our Products</h1>
+    <p>Explore premium, hand-picked items across all categories — from tech to lifestyle.</p>
+  </section>
+
+  <!-- ✅ CATEGORY FILTER -->
+  <div class="category-bar">
+    <% const categories = ['All', 'Electronics', 'Accessories', 'Fitness', 'Lifestyle', 'Food & Beverage']; %>
+    <% categories.forEach(cat => { %>
+      <a 
+        href="/products?category=<%= encodeURIComponent(cat) %>&sort=<%= sortBy %>&order=<%= order %>"
+        class="filter-link <%= selectedCategory === cat ? 'active' : '' %>">
+        <%= cat %>
+      </a>
+    <% }) %>
+  </div>
+
+  <!-- ✅ SORTING -->
+  <div class="sort-container">
+    <label for="sort">Sort by:</label>
+    <select id="sort" onchange="changeSort()">
+      <option value="name" <%= sortBy === 'name' ? 'selected' : '' %>>Name (A–Z)</option>
+      <option value="price" <%= sortBy === 'price' ? 'selected' : '' %>>Price (Low → High)</option>
+    </select>
+  </div>
+
+  <!-- ✅ PRODUCTS GRID -->
+  <section class="products-grid">
+    <% if (products.length === 0) { %>
+      <p style="text-align:center; font-size:1.1rem; color:#777;">No products found in this category.</p>
+    <% } else { %>
+      <% products.forEach(product => { %>
+        <div class="product-card">
+          <img src="<%= product.image %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p class="price">$<%= product.price.toFixed(2) %></p>
+          <p class="desc"><%= product.description %></p>
+          <div class="meta">
+            <span class="tag"><%= product.category %></span>
+            <span class="stock"><%= product.stock ? product.stock + ' in stock' : '' %></span>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-primary" onclick="addToCart(event, '<%= product._id %>')">Add to Cart</button>
+            <a href="/product/<%= product._id %>" class="btn-outline">View Details</a>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </section>
+
+  <!-- ✅ PAGINATION -->
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/products?page=<%= currentPage - 1 %>&category=<%= selectedCategory %>&sort=<%= sortBy %>&order=<%= order %>" class="page-btn">‹ Prev</a>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/products?page=<%= i %>&category=<%= selectedCategory %>&sort=<%= sortBy %>&order=<%= order %>"
+         class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+
+    <% if (currentPage < totalPages) { %>
+      <a href="/products?page=<%= currentPage + 1 %>&category=<%= selectedCategory %>&sort=<%= sortBy %>&order=<%= order %>" class="page-btn">Next ›</a>
+    <% } %>
+  </div>
+  <% } %>
+
+  <!-- ✅ FOOTER -->
+  <footer>
+    <div>
+      <h3>Shopzilla</h3>
+      <p>Your trusted online shopping destination for premium products. We offer quality items with fast shipping and excellent customer service.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+
+  </footer>
+
+  <div class="footer-bottom">© 2025 Shopzilla. All rights reserved.</div>
+
+  <!-- ✅ SCRIPTS -->
+  <script>
+  function changeSort() {
+    const sort = document.getElementById('sort').value;
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'All';
+    window.location.href = `/products?category=${encodeURIComponent(category)}&sort=${sort}&order=asc`;
+  }
+
+  async function addToCart(event, id) {
+    event.preventDefault();
+    try {
+      const res = await fetch(`/cart/add/${id}`, { method: 'POST' });
+      const data = await res.json();
+
+      if (data.success) {
+        const cartBtn = document.querySelector('.cart-btn');
+        cartBtn.textContent = `🛒 Cart (${data.count})`;
+
+        const alertBox = document.createElement('div');
+        alertBox.textContent = '✅ Added to cart!';
+        alertBox.style.position = 'fixed';
+        alertBox.style.bottom = '20px';
+        alertBox.style.right = '20px';
+        alertBox.style.background = '#28a745';
+        alertBox.style.color = '#fff';
+        alertBox.style.padding = '10px 15px';
+        alertBox.style.borderRadius = '6px';
+        alertBox.style.fontSize = '0.9rem';
+        alertBox.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+        document.body.appendChild(alertBox);
+        setTimeout(() => alertBox.remove(), 1500);
+      } else {
+        alert('Error adding to cart');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Error adding to cart');
+    }
+  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || "Shopzilla | Home" %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #333;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #007bff;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #007bff;
+    }
+    nav ul li a.active::after {
+    nav ul li a.admin-link {
+      color: #c2410c;
+      font-weight: 600;
+    }
+    nav ul li a.admin-link:hover {
+      color: #9a3412;
+    }
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #007bff;
+      bottom: -4px;
+      left: 0;
+      border-radius: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* ✅ Unified Cart Button Styling */
+    .cart-btn {
+      background: #007bff;
+      color: #fff !important;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.3s;
+      font-size: 0.95rem;
+    }
+    .cart-btn:hover {
+      background: #0056b3;
+      color: #fff;
+    }
+
+    .btn-outline {
+      color: #007bff;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-outline:hover {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: #007bff;
+      color: #fff;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+
+    /* HERO */
+    .hero {
+      background: url('/images/homepagebackground.jpg') center/cover no-repeat;
+      color: white;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .hero span { color: #4da3ff; }
+    .hero p { font-size: 1.1rem; margin-bottom: 2rem; }
+    .hero .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: #007bff;
+      color: white;
+      margin-right: 10px;
+    }
+    .btn-secondary {
+      border: 2px solid white;
+      color: white;
+      background: transparent;
+    }
+
+    /* FEATURES */
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding: 4rem 10%;
+      background: #f9fafb;
+      text-align: center;
+    }
+    .feature {
+      max-width: 250px;
+    }
+    .feature i {
+      font-size: 2rem;
+      color: #007bff;
+      margin-bottom: 1rem;
+    }
+    .feature h3 { font-weight: 600; margin-bottom: 0.5rem; }
+    .feature p { color: #666; font-size: 0.9rem; }
+
+    /* PRODUCTS */
+    .section-title {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .section-sub {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 0 5% 3rem;
+      justify-items: center;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 1rem;
+      transition: 0.3s;
+      width: 100%;
+      max-width: 280px;
+    }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+    }
+    .product-card h3 { font-size: 1.1rem; margin: 0.5rem 0; }
+    .product-card p { font-size: 0.9rem; color: #555; }
+    .product-card .price {
+      color: #007bff;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+    .product-card button {
+      margin-top: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .product-card button:hover { background: #0056b3; }
+
+    /* NEWSLETTER */
+    .newsletter {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .newsletter h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .newsletter p { margin-bottom: 1.5rem; }
+    .newsletter input {
+      padding: 0.7rem;
+      border: none;
+      border-radius: 6px;
+      width: 250px;
+      margin-right: 10px;
+    }
+    .newsletter button {
+      background: white;
+      color: #007bff;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+    }
+    .newsletter button:hover { background: #e5e5e5; }
+
+    footer { background: #0f172a; color: #fff; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 3rem 1rem; }
+    footer div { max-width: 300px; }
+    footer h3 { margin-bottom: 1rem; }
+    footer a { color: #ddd; text-decoration: none; display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    footer a:hover { color: #fff; }
+    .footer-bottom { text-align: center; background: #0f172a; padding: 1rem; border-top: 1px solid #1e293b; color: #aaa; font-size: 0.9rem; }
+
+    footer p {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+    
+  </style>
+</head>
+
+<body>
+  <!-- ✅ NAVBAR -->
+  <nav>
+    <div class="logo">Shopzilla</div>
+    <ul>
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/products">Products</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/admin/login" class="admin-link">Admin</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn">🛒 Cart (<%= cartCount || 0 %>)</a>
+      <a href="/login" class="btn-outline">Sign In</a>
+      <a href="/register" class="btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Shop with <span>Confidence</span></h1>
+      <p>Discover premium products with fast shipping and exceptional customer service.</p>
+      <button class="btn btn-primary" onclick="location.href='/products'">Shop Now</button>
+      <button class="btn btn-secondary">Learn More</button>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feature">
+      <i class="fas fa-shipping-fast"></i>
+      <h3>Fast Shipping</h3>
+      <p>Free shipping on orders over $100. Get your products delivered quickly and safely.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-lock"></i>
+      <h3>Secure Payment</h3>
+      <p>Your payment information is protected with industry-standard encryption.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-headset"></i>
+      <h3>24/7 Support</h3>
+      <p>Our customer service team is here to help you whenever you need assistance.</p>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section>
+    <h2 class="section-title">Featured Products</h2>
+    <p class="section-sub">Check out our most popular items, carefully selected for quality and value</p>
+    <div class="product-grid">
+      <% products.slice(0, 5).forEach(product => { %>
+        <div class="product-card">
+          <img src="<%= product.image %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p class="price">$<%= product.price.toFixed(2) %></p>
+          <p><%= product.description %></p>
+          <button type="button" onclick="addToCart(event, '<%= product._id %>')">Add to Cart</button>
+        </div>
+      <% }) %>
+    </div>
+    <div style="text-align:center; margin-bottom:3rem;">
+      <a href="/products" class="btn btn-primary">View All Products</a>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <h2>Stay Updated</h2>
+    <p>Subscribe to our newsletter for exclusive deals and new product announcements</p>
+    <form>
+      <input type="email" placeholder="Enter your email">
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <!-- Footer -->
+  <footer>
+    <div>
+      <h3>Shopzilla</h3>
+      <p>Your trusted online shopping destination for premium products. We offer quality items with fast shipping and excellent customer service.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  
+
+  </footer>
+
+  <div class="footer-bottom">© 2025 Shopzilla. All rights reserved.</div>
+
+  <!-- ✅ CART LOGIC -->
+  <script>
+    async function addToCart(event, id) {
+      event.preventDefault();
+      try {
+        const res = await fetch(`/cart/add/${id}`, { method: 'POST' });
+        const data = await res.json();
+
+        if (data.success) {
+          const cartBtn = document.querySelector('.cart-btn');
+          cartBtn.textContent = `🛒 Cart (${data.count})`;
+
+          const alertBox = document.createElement('div');
+          alertBox.textContent = '✅ Added to cart!';
+          alertBox.style.position = 'fixed';
+          alertBox.style.bottom = '20px';
+          alertBox.style.right = '20px';
+          alertBox.style.background = '#28a745';
+          alertBox.style.color = '#fff';
+          alertBox.style.padding = '10px 15px';
+          alertBox.style.borderRadius = '6px';
+          alertBox.style.fontSize = '0.9rem';
+          alertBox.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+          alertBox.style.zIndex = '9999';
+          document.body.appendChild(alertBox);
+          setTimeout(() => alertBox.remove(), 1500);
+        } else {
+          alert(data.error || 'Error adding to cart');
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Error adding to cart');
+      }
+    }
+
+    // 🔄 Load cart count on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/cart-count');
+        const data = await res.json();
+        document.querySelector('.cart-btn').innerHTML = `<i class="fas fa-shopping-cart"></i> Cart (${data.count})`;
+      } catch (err) {
+        console.warn('Cart count fetch failed');
+      }
+    });
+  </script>
+</body>
+</html>

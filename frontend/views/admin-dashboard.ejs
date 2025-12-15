@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Shopzilla</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        font-family: 'Inter', sans-serif;
+        --primary: #007bff;
+        --primary-dark: #0056b3;
+        --bg: #f4f6fb;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #f4f6fb;
+        min-height: 100vh;
+        color: #0f172a;
+      }
+      nav {
+        background: #fff;
+        padding: 1.2rem 8%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      nav .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      nav a {
+        text-decoration: none;
+        color: #475569;
+        font-weight: 600;
+      }
+      nav a:hover {
+        color: var(--primary);
+      }
+      nav .logout-btn {
+        background: var(--primary);
+        color: #fff;
+        padding: 0.6rem 1.4rem;
+        border-radius: 10px;
+        font-weight: 600;
+      }
+      main {
+        padding: 2.5rem 8%;
+      }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .page-header h1 {
+        font-size: 2.2rem;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 1.8rem;
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e2e8f0;
+      }
+      .card h2 {
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 0.6rem;
+      }
+      .card p.value {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .card small {
+        color: #94a3b8;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+      }
+      table th,
+      table td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      table th {
+        background: #f8fafc;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+      }
+      table tr:hover td {
+        background: #f9fbff;
+      }
+      table tr:last-child td {
+        border-bottom: none;
+      }
+      .status {
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.15);
+        color: #15803d;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+      .currency-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .currency-list li {
+        margin-bottom: 0.35rem;
+        font-size: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #e2e8f0;
+        padding-bottom: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">Shopzilla Admin</div>
+      <div class="nav-links">
+        <a href="/">← Back to Store</a>
+        <a href="/admin/logout" class="logout-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main>
+      <div class="page-header">
+        <div>
+          <h1>Revenue Overview</h1>
+          <p>Real-time insight into every order placed on Shopzilla.</p>
+        </div>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h2>Total Orders</h2>
+          <p class="value"><%= totalOrders %></p>
+          <small>All-time orders stored in the system</small>
+        </div>
+
+        <div class="card">
+          <h2>Total Revenue (USD)</h2>
+          <p class="value">$<%= totalRevenueUSD.toFixed(2) %></p>
+          <small>Converted automatically from local currencies</small>
+        </div>
+
+        <div class="card">
+          <h2>Revenue by Currency</h2>
+          <ul class="currency-list">
+            <% Object.keys(currencyTotals).forEach(currency => { %>
+              <li>
+                <span><%= currency.toUpperCase() %></span>
+                <strong><%= currencyTotals[currency].toFixed(2) %></strong>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Email</th>
+            <th>Currency</th>
+            <th>Total</th>
+            <th>Total (USD)</th>
+            <th>Items</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (orders.length === 0) { %>
+            <tr>
+              <td colspan="7" style="text-align: center;">No orders yet.</td>
+            </tr>
+          <% } else { %>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><%= order._id %></td>
+                <td><%= order.customerEmail %></td>
+                <td><%= (order.currency || 'usd').toUpperCase() %></td>
+                <td><%= order.total?.toFixed(2) || '0.00' %></td>
+                <td>$<%= (order.totalAmountUSD || 0).toFixed(2) %></td>
+                <td>
+                  <% if (order.items && order.items.length) { %>
+                    <div style="display:flex; flex-direction:column; gap:0.2rem;">
+                      <% order.items.forEach(item => { 
+                           const cleanedName = (item.name || '').replace(/\s×\s\d+$/,'');
+                      %>
+                        <span style="font-size:0.9rem; color:#475569;">
+                          <strong><%= cleanedName %></strong>
+                          &times; <%= item.quantity %>
+                        </span>
+                      <% }) %>
+                    </div>
+                  <% } else { %>
+                    <span style="color:#94a3b8;">No items</span>
+                  <% } %>
+                </td>
+                <td><span class="status"><%= order.paymentStatus || 'paid' %></span></td>
+                <td><%= order.createdAt?.toLocaleString() %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+      </section>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #333; margin: 0; }
+    .navbar {
+      background: #fff;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 5%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .navbar .logo { font-size: 1.5rem; font-weight: 700; color: #007bff; }
+    nav a { margin: 0 1rem; color: #333; text-decoration: none; font-weight: 500; }
+    nav a:hover, nav a.active { color: #007bff; }
+    .btn-outline, .btn-primary {
+      padding: 6px 12px; border-radius: 6px; text-decoration: none; margin-left: 8px;
+    }
+    .btn-outline { border: 1px solid #007bff; color: #007bff; }
+    .btn-outline:hover { background: #007bff; color: #fff; }
+    .btn-primary { background: #007bff; color: #fff; border: none; }
+    .btn-primary:hover { background: #0056b3; }
+
+    .cart-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      width: 90%;
+      margin: 3rem auto;
+    }
+    .cart-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem; border-bottom: 1px solid #eee; background: #fff;
+      border-radius: 10px; margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .cart-item img {
+      width: 100px; height: 100px; object-fit: contain;
+      border-radius: 10px; background: #f8f8f8;
+    }
+    .cart-info { flex: 1; margin-left: 1rem; }
+    .cart-info h3 { font-size: 1rem; margin-bottom: 6px; }
+    .cart-info p { font-size: 0.9rem; color: #555; }
+
+    .quantity-control {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid #ddd; border-radius: 8px; padding: 4px 8px;
+    }
+    .quantity-control button {
+      border: none; background: #007bff; color: white; font-size: 1rem;
+      width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+    }
+    .quantity-control button:hover { background: #0056b3; }
+
+    .cart-summary {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      height: fit-content;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .summary-total {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+    .btn-checkout {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .btn-continue {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    footer { background: #0f172a; color: #fff; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 3rem 1rem; }
+    footer div { max-width: 300px; }
+    footer h3 { margin-bottom: 1rem; }
+    footer a { color: #ddd; text-decoration: none; display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    footer a:hover { color: #fff; }
+    .footer-bottom { text-align: center; background: #0f172a; padding: 1rem; border-top: 1px solid #1e293b; color: #aaa; font-size: 0.9rem; }
+
+    footer p {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #777;
+}
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Shopzilla</div>
+    <nav>
+      <a href="/" class="<%= title === 'Shopzilla' ? 'active' : '' %>">Home</a>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/cart" class="cart-btn">🛒 Cart (<%= cartCount || 0 %>)</a>
+      <a href="/login" class="btn-outline">Sign In</a>
+      <a href="/register" class="btn-primary">Sign Up</a>
+    </div>
+  </header>
+
+  <h2 style="text-align:center; margin:2rem 0;">Shopping Cart</h2>
+
+  <div class="cart-container">
+    <div>
+      <% if (cart.length === 0) { %>
+        <p>Your cart is empty.</p>
+      <% } else { %>
+        <% cart.forEach(item => { %>
+          <div class="cart-item">
+            <img src="<%= item.image %>" alt="<%= item.name %>">
+            <div class="cart-info">
+              <h3><%= item.name %></h3>
+              <p>$<%= item.price.toFixed(2) %> each</p>
+              <p>In stock: <%= item.stock %></p>
+            </div>
+
+            <div class="quantity-control">
+              <button onclick="updateQuantity('<%= item._id %>', -1)">−</button>
+              <span><%= item.quantity %></span>
+              <button onclick="updateQuantity('<%= item._id %>', 1)">+</button>
+            </div>
+
+            <p style="width: 80px; text-align: right;">$<%= (item.price * item.quantity).toFixed(2) %></p>
+            <form action="/cart/remove/<%= item._id %>" method="POST">
+              <button style="background:none;border:none;color:red;font-size:1.2rem;">🗑</button>
+            </form>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-line"><span>Subtotal</span><span>$<%= Number(subtotal).toFixed(2) %></span></div>
+<div class="summary-line"><span>Shipping</span><span>$0.00</span></div>
+<div class="summary-line"><span>Tax</span><span>$0.00</span></div>
+<div class="summary-line summary-total"><span>Total</span><span>$<%= Number(subtotal).toFixed(2) %></span></div>
+      <button class="btn-checkout" onclick="location.href='/checkout'">Proceed to Checkout</button>
+      <button class="btn-continue" onclick="location.href='/products'">Continue Shopping</button>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <h3>Shopzilla</h3>
+      <p>Your trusted online shopping destination for premium products. We offer quality items with fast shipping and excellent customer service.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="/">Home</a>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+
+  </footer>
+
+  <div class="footer-bottom">© 2025 Shopzilla. All rights reserved.</div>
+
+  <script>
+    async function updateQuantity(id, change) {
+      try {
+        const res = await fetch(`/cart/update/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ change })
+        });
+        const data = await res.json();
+        if (data.success) location.reload();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
