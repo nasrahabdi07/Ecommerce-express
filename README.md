@@ -37,7 +37,7 @@ This is a **full-stack e-commerce web application** built with Node.js and Expre
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 ecommerce-express/
@@ -318,7 +318,7 @@ Order details displayed
 
 ---
 
-## 💾 Database Structure
+##  Database Structure
 
 ### Users Collection
 ```javascript
@@ -396,7 +396,7 @@ Order details displayed
 
 ---
 
-## 🌍 Multi-Currency System
+##  Multi-Currency System
 
 ### How It Works:
 
@@ -428,7 +428,7 @@ Order details displayed
 
 ---
 
-## 🔄 Session Management
+##  Session Management
 
 **How Sessions Work:**
 - User logs in → `req.session.userId` set
