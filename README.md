@@ -1,6 +1,6 @@
-# 📚 Complete Project Explanation - E-Commerce Website
+#  Complete Project Explanation - E-Commerce Website
 
-## 🎯 Project Overview
+##  Project Overview
 
 This is a **full-stack e-commerce web application** built with Node.js and Express. It allows customers to browse products, add items to cart, and make purchases using Stripe payment processing.
 
@@ -15,7 +15,7 @@ This is a **full-stack e-commerce web application** built with Node.js and Expre
 
 ---
 
-## 🏗️ Technology Stack
+##  Technology Stack
 
 ### Backend
 - **Node.js** - JavaScript runtime
@@ -67,7 +67,7 @@ ecommerce-express/
 
 ---
 
-## 🔄 Application Flow
+##  Application Flow
 
 ### 1. **User Registration & Login**
 
@@ -367,7 +367,7 @@ Order details displayed
 
 ---
 
-## 🔐 Security Features
+##  Security Features
 
 1. **Password Hashing**
    - Uses bcrypt with salt rounds: 10
@@ -449,7 +449,7 @@ Order details displayed
 
 ---
 
-## 📊 Key Routes
+##  Key Routes
 
 ### Public Routes
 - `GET /` - Homepage
@@ -479,7 +479,7 @@ Order details displayed
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Test Cards (Stripe Test Mode)
 - **Card Number:** `4242 4242 4242 4242`
@@ -503,7 +503,7 @@ Order details displayed
 
 ---
 
-## 🎯 Key Features Explained
+##  Key Features Explained
 
 ### 1. **Stock Management**
 - Prevents adding more items than available
@@ -530,7 +530,7 @@ Order details displayed
 
 ---
 
-## 📝 Environment Variables
+##  Environment Variables
 
 Required `.env` file:
 ```env
@@ -544,7 +544,7 @@ NODE_ENV=development
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 1. **Install dependencies:**
    ```bash
@@ -609,19 +609,19 @@ NODE_ENV=development
    - Environment variables
 
 ### Technical Skills Demonstrated:
-- ✅ RESTful API design
-- ✅ Database modeling (MongoDB/Mongoose)
-- ✅ Payment gateway integration
-- ✅ Session management
-- ✅ Security implementation
-- ✅ Error handling
-- ✅ Multi-currency systems
-- ✅ Real-time updates (AJAX)
-- ✅ Template rendering (EJS)
+- RESTful API design
+-  Database modeling (MongoDB/Mongoose)
+-  Payment gateway integration
+-  Session management
+- Security implementation
+- Error handling
+-  Multi-currency systems
+-  Real-time updates (AJAX)
+-  Template rendering (EJS)
 
 ---
 
-## 📊 Data Flow Diagram
+##  Data Flow Diagram
 
 ```
 User Browser
@@ -641,7 +641,7 @@ Webhook → Order Saved
 
 ---
 
-## 🔍 Important Code Sections
+##  Important Code Sections
 
 ### 1. Stripe Checkout Creation
 **Location:** `server.js` - `/create-checkout-session`
@@ -673,7 +673,7 @@ Webhook → Order Saved
 
 ---
 
-## ✅ Project Completion Checklist
+##  Project Completion Checklist
 
 - [x] User authentication (register/login)
 - [x] Product browsing with filters
@@ -690,7 +690,7 @@ Webhook → Order Saved
 
 ---
 
-## 🎯 Summary
+##  Summary
 
 This is a **complete, production-ready e-commerce application** that demonstrates:
 - Full-stack web development
